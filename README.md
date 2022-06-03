@@ -21,6 +21,6 @@ L'historique des infrastructures déployées doit être conservé (les anciennes
 
 Jean TALGORN-THOMAS <br />
 Sarah PINTO <br />
-Benjamin Pradon <br />
-Mehdi Lajili <br />
+Benjamin PRADON <br />
+Mehdi LAJILI <br />
 Chaimae EL GHOUBACHI

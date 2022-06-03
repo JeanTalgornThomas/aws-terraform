@@ -1,0 +1,20 @@
+#### Mise en place de l'environnement Terraform ####
+
+if [ ! -d "aws-terraform" ]
+then 
+	git clone https://github.com/JeanTalgornThomas/aws-terraform
+fi
+
+
+cd aws-terraform
+
+
+#. ~/.envars#
+
+sed -i "s|<##ACCESS_KEY##>|${ACCESS_KEY}|g" 00-provider.tf
+sed -i "s|<##SECRET_KEY##>|${SECRET_KEY}|g" 00-provider.tf
+
+sed -i "s|<##INFRA_NAME##>|GROUPE1|g" 01-network.tf
+sed -i "s|<##CLIENT_ID##>|44|g" 01-network.tf
+
+terraform init

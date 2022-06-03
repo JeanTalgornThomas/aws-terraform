@@ -1,0 +1,18 @@
+#!/bin/bash
+cd aws-terraform/GENERATED-SECURITY-GROUPS
+for SGROUP in $(ls *.tf)
+do
+    GROUP_NAME=$(echo $SGROUP | cut -d"." -f1)
+    GEN_FILE="${GROUP_NAME}.tfpart"
+    cp ../templates/security_group_template $GEN_FILE
+
+    sed -i "s|<##SG_NAME##>|${GROUP_NAME}|g" $GEN_FILE
+
+    LTOWRITE=$(cat -n ${GEN_FILE} | grep "<##INGRESS_RULES##>" | sed 's|\t| |g' | tr -s " " | cut -d" " -f2)
+
+    sed -i "${LTOWRITE} r ${SGROUP}" $GEN_FILE
+    sed -i "s|<##INGRESS_RULES##>||g" $GEN_FILE
+
+    rm $SGROUP
+done
+cat *.tfpart > ../02-securitygroups.tf

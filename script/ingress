@@ -1,0 +1,44 @@
+#!/bin/bash
+cd aws-terraform
+
+I=0
+cat flow_matrix.csv
+while read line
+do
+    if [ $I -gt 0 ]
+    then
+        if [ ! -z $line ]
+        then
+            SECURITY_GROUP=$(echo $line | cut -d";" -f1)
+            PORT=$(echo $line | cut -d";" -f2)
+            PROTOCOL=$(echo $line | cut -d";" -f3)
+            TYPE=$(echo $line | cut -d";" -f4)
+            SOURCE=$(echo $line | cut -d";" -f5)
+
+            if [[ -d templates ]]
+            then
+                cd templates
+                
+            fi
+
+            cp ingress_template new_instance
+
+            sed -i "s|<##SECURITY_GROUP##>|${SECURITY_GROUP}|g" new_instance
+            sed -i "s|<##PORT##>|${PORT}|g" new_instance
+            sed -i "s|<##PROTOCOL##>|${PROTOCOL}|g" new_instance
+            sed -i "s|<##TYPE##>|${TYPE}|g" new_instance
+            sed -i "s|<##SOURCE##>|${SOURCE}|g" new_instance
+
+            #Si le dossier n'exite pas alors création
+            if [[ ! -d ../GENERATED-SECURITY-GROUPS ]]
+            then
+                mkdir ../GENERATED-SECURITY-GROUPS
+            fi
+
+            #Déplacement du fichier dans le dossier
+            mv new_instance ../GENERATED-SECURITY-GROUPS/${SECURITY_GROUP}.tf
+        fi
+    else
+        I=1
+    fi
+done < flow_matrix.csv
